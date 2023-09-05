@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-logdog"
+authors = [
+    {name = "Adam Wasilewski"},
+]
+description = "Python logging utilities"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["logging"]
+license.file = "LICENSE"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dynamic = ["version"]
+
+[project.urls]
+GitHub = "https://github.com/a-was/logdog.py"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.dynamic]
+version = {file="VERSION"}
+
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+line-length = 120
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"examples/**" = ["E402", "E501"]
