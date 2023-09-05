@@ -1,7 +1,7 @@
 import logging
 
 import pytest
-from logdog import LogMessageWrapper
+from logdog.wrapper import JsonRenderer, LogMessageWrapper
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +20,18 @@ logger = logging.getLogger(__name__)
         (
             LogMessageWrapper(logger, prefix=" : "),
             "message : k=v",
+        ),
+        (
+            LogMessageWrapper(logger, renderer=JsonRenderer()),
+            'message {"k": "v"}',
+        ),
+        (
+            LogMessageWrapper(logger, prefix=" [", suffix="]", renderer=JsonRenderer()),
+            'message [{"k": "v"}]',
+        ),
+        (
+            LogMessageWrapper(logger, prefix=" : ", renderer=JsonRenderer()),
+            'message : {"k": "v"}',
         ),
     ],
 )

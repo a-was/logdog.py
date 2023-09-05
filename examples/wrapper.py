@@ -1,6 +1,7 @@
 import logging
 
 from logdog import LogMessageWrapper
+from logdog.wrapper import JsonRenderer
 
 # logging setup
 logger = logging.getLogger(__name__)
@@ -15,6 +16,7 @@ logger.addHandler(handler)
 log = LogMessageWrapper(
     logger,
     prefix=" : ",
+    # renderer=JsonRenderer(),  # uncomment to use different renderer
 )
 
 log.logger.info("You can access logger")

@@ -2,9 +2,9 @@ from datetime import date, datetime, timedelta, timezone
 from enum import Enum
 
 import pytest
-from logdog.wrapper import LogfmtFormatter
+from logdog.wrapper import LogfmtRenderer
 
-formatter = LogfmtFormatter()
+renderer = LogfmtRenderer()
 
 
 @pytest.mark.parametrize(
@@ -27,7 +27,7 @@ formatter = LogfmtFormatter()
     ],
 )
 def test_format_string(value, expected):
-    assert formatter._format_string(value) == expected
+    assert renderer._format_string(value) == expected
 
 
 @pytest.mark.parametrize(
@@ -51,7 +51,7 @@ def test_format_string(value, expected):
     ],
 )
 def test_format_value(value, expected):
-    assert formatter.format_value(value) == expected
+    assert renderer.format_value(value) == expected
 
 
 @pytest.mark.parametrize(
@@ -65,7 +65,7 @@ def test_format_value(value, expected):
     ],
 )
 def test_format_list(value, expected):
-    assert formatter.format_value(value) == expected
+    assert renderer.format_value(value) == expected
 
 
 @pytest.mark.parametrize(
@@ -80,7 +80,7 @@ def test_format_list(value, expected):
     ],
 )
 def test_format_dict(value, expected):
-    assert formatter.format_value(value) == expected
+    assert renderer.format_value(value) == expected
 
 
 @pytest.mark.parametrize(
@@ -93,8 +93,8 @@ def test_format_dict(value, expected):
         ({"dict": {"dict key": "dict value"}}, 'dict={"dict key"="dict value"}'),
     ],
 )
-def test_format_kwargs(kwargs, expected):
-    assert formatter.format(kwargs) == expected
+def test_render_kwargs(kwargs, expected):
+    assert renderer.render(kwargs) == expected
 
 
 @pytest.mark.parametrize(
@@ -110,7 +110,7 @@ def test_format_kwargs(kwargs, expected):
     ],
 )
 def test_format_datetime(value, expected):
-    assert formatter.format_value(value) == expected
+    assert renderer.format_value(value) == expected
 
 
 def test_format_enum():
@@ -119,4 +119,4 @@ def test_format_enum():
         ENGLISH = "en"
 
     language = LanguageEnum.ENGLISH
-    assert formatter.format_value(language) == language.name
+    assert renderer.format_value(language) == language.name

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class BaseFormatter(ABC):
+class BaseRenderer(ABC):
     @abstractmethod
-    def format(self, obj: dict) -> str:
+    def render(self, obj: dict) -> str:
         raise NotImplementedError

@@ -52,3 +52,28 @@ log = LogMessageWrapper(logger, prefix=" : ")
 log.info("user login", user=user_id, action="login", value=some_value)
 # output: 2023-09-05 12:01:09,836 : INFO     : user login : user=1 action=login value="some string"
 ```
+
+### Renderers
+
+Currently there are 2 renderers:
+
+- `LogfmtRenderer` (default one)
+- `JsonRenderer`
+
+Same simple example using different renderer:
+
+```python
+from logdog.wrapper import JsonRenderer, LogMessageWrapper
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s : %(levelname)-8s : %(message)s")
+logger = logging.getLogger("mylogger")
+log = LogMessageWrapper(
+    logger,
+    prefix=" [",
+    suffix="]",
+    renderer=JsonRenderer(),
+)
+
+log.info("user login", user=user_id, action="login", value=some_value)
+# output: 2023-09-05 12:01:09,836 : INFO     : user login [{"user": 1, "action": "login", "value": "some string"}]
+```

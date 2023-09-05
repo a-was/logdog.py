@@ -3,15 +3,15 @@ import enum
 import numbers
 from typing import Any
 
-from .base import BaseFormatter
+from .base import BaseRenderer
 
 
-class LogfmtFormatter(BaseFormatter):
+class LogfmtRenderer(BaseRenderer):
     NONE_STR = "null"
     TRUE_STR = "true"
     FALSE_STR = "false"
 
-    def format(self, obj: dict) -> str:
+    def render(self, obj: dict) -> str:
         return " ".join(f"{k}={self.format_value(v)}" for k, v in obj.items())
 
     def format_value(self, value: Any) -> str:
