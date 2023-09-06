@@ -1,7 +1,8 @@
 import logging
 
 import pytest
-from logdog.wrapper import JsonRenderer, LogMessageWrapper
+
+from src.logdog.wrapper import JsonRenderer, LogMessageWrapper
 
 logger = logging.getLogger(__name__)
 

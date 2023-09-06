@@ -2,7 +2,8 @@ from datetime import date, datetime, timedelta, timezone
 from enum import Enum
 
 import pytest
-from logdog.wrapper import JsonRenderer
+
+from src.logdog.wrapper import JsonRenderer
 
 renderer = JsonRenderer()
 

@@ -2,7 +2,8 @@ from datetime import date, datetime, timedelta, timezone
 from enum import Enum
 
 import pytest
-from logdog.wrapper import LogfmtRenderer
+
+from src.logdog.wrapper import LogfmtRenderer
 
 renderer = LogfmtRenderer()
 

@@ -35,6 +35,6 @@ jobs:
           # default set of ruff rules with GitHub Annotations
           ruff --format=github .
       -
-        name: Test with pytest
+        name: Run tests
         run: |
-          pytest
+          make test
