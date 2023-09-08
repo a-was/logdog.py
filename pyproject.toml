@@ -4,26 +4,31 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "python-logdog"
-authors = [
-    {name = "Adam Wasilewski"},
-]
+authors = [{ name = "Adam Wasilewski" }]
 description = "Python logging utilities"
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["logging"]
-license.file = "LICENSE"
+license.text = "MIT License"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Topic :: System :: Logging",
+    "Topic :: Utilities",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+    "License :: OSI Approved :: MIT License",
 ]
 dynamic = ["version"]
 
 [project.urls]
-GitHub = "https://github.com/a-was/logdog.py"
+Homepage = "https://github.com/a-was/logdog.py"
+Repository = "https://github.com/a-was/logdog.py"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 [tool.setuptools.dynamic]
-version = {file="VERSION"}
+version = { file = "VERSION" }
 
 
 [tool.black]
