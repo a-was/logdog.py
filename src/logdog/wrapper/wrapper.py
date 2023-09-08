@@ -45,30 +45,36 @@ class LogMessageWrapper:
     def debug(self, msg: str, **kwargs):
         self.logger.debug(
             self._wrap(msg, kwargs),
+            stacklevel=2,
         )
 
     def info(self, msg: str, **kwargs):
         self.logger.info(
             self._wrap(msg, kwargs),
+            stacklevel=2,
         )
 
     def warning(self, msg: str, **kwargs):
         self.logger.warning(
             self._wrap(msg, kwargs),
+            stacklevel=2,
         )
 
     def error(self, msg: str, **kwargs):
         self.logger.error(
             self._wrap(msg, kwargs),
+            stacklevel=2,
         )
 
     def exception(self, msg: str, **kwargs):
         self.logger.exception(
             self._wrap(msg, kwargs),
+            stacklevel=3,
         )
 
     def critical(self, msg: str, *, exc_info: bool = False, **kwargs):
         self.logger.critical(
             self._wrap(msg, kwargs),
             exc_info=exc_info,
+            stacklevel=2,
         )
