@@ -3,15 +3,18 @@ import enum
 import numbers
 from typing import Any
 
-from .base import BaseRenderer
+from .base_encoder import BaseEncoder
 
 
-class LogfmtRenderer(BaseRenderer):
+class LogfmtEncoder(BaseEncoder):
     NONE_STR = "null"
     TRUE_STR = "true"
     FALSE_STR = "false"
 
-    def render(self, obj: dict) -> str:
+    def default(self, obj: Any) -> str:
+        raise TypeError(f"object of type '{type(obj).__name__}' is not logfmt serializable")
+
+    def encode(self, obj: dict[str, Any]) -> str:
         return " ".join(f"{k}={self.format_value(v)}" for k, v in obj.items())
 
     def format_value(self, value: Any) -> str:
@@ -31,7 +34,9 @@ class LogfmtRenderer(BaseRenderer):
             return value.isoformat()
         if isinstance(value, enum.Enum):
             return value.name
-        return self._format_string(str(value))
+        # if isinstance(value, Exception):
+        #     return self._format_string(str(value))
+        return self.default(value)
 
     def _format_list(self, value: list) -> str:
         return "[" + " ".join(self.format_value(v) for v in value) + "]"

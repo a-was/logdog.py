@@ -1,12 +1,12 @@
 import logging
+from typing import Any
 
-from .base import BaseRenderer
-from .logfmt_renderer import LogfmtRenderer
+from ..encoder import BaseEncoder, LogfmtEncoder
 
 
 class LogMessageWrapper:
     """
-    LogMessageWrapper wraps a logging.Logger and provides log message formatting.
+    LogMessageWrapper wraps a logging.Logger and provides log message formatting
     """
 
     def __init__(
@@ -15,7 +15,7 @@ class LogMessageWrapper:
         *,
         prefix: str = " ",
         suffix: str | None = None,
-        renderer: BaseRenderer | None = None,
+        encoder: BaseEncoder | None = None,
     ):
         if not isinstance(logger, logging.Logger):
             raise TypeError("logger must be a logging.Logger")
@@ -31,16 +31,16 @@ class LogMessageWrapper:
             raise TypeError("suffix must be a string")
         self._suffix = suffix
 
-        if renderer is None:
-            renderer = LogfmtRenderer()
-        elif not isinstance(renderer, BaseRenderer):
-            raise TypeError(f"renderer must be an instance of {BaseRenderer.__name__}")
-        self._renderer = renderer
+        if encoder is None:
+            encoder = LogfmtEncoder()
+        elif not isinstance(encoder, BaseEncoder):
+            raise TypeError(f"encoder must be an instance of {BaseEncoder.__name__}")
+        self._encoder = encoder
 
-    def _wrap(self, msg: str, kwargs: dict) -> str:
+    def _wrap(self, msg: str, kwargs: dict[str, Any]) -> str:
         if not kwargs:
             return msg
-        return msg + self._prefix + self._renderer.render(kwargs) + self._suffix
+        return msg + self._prefix + self._encoder.encode(kwargs) + self._suffix
 
     def debug(self, msg: str, **kwargs):
         self.logger.debug(
