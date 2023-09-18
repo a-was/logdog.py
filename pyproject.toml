@@ -22,6 +22,7 @@ classifiers = [
 dynamic = ["version"]
 
 [project.urls]
+Documentation = "https://a-was.github.io/logdog.py/"
 Homepage = "https://github.com/a-was/logdog.py"
 Repository = "https://github.com/a-was/logdog.py"
 
