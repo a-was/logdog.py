@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from src.logdog.wrapper import JsonRenderer, LogMessageWrapper
+from src.logdog import JsonEncoder, LogMessageWrapper
 
 logger = logging.getLogger(__name__)
 
@@ -23,18 +23,19 @@ logger = logging.getLogger(__name__)
             "message : k=v",
         ),
         (
-            LogMessageWrapper(logger, renderer=JsonRenderer()),
+            LogMessageWrapper(logger, encoder=JsonEncoder()),
             'message {"k": "v"}',
         ),
         (
-            LogMessageWrapper(logger, prefix=" [", suffix="]", renderer=JsonRenderer()),
+            LogMessageWrapper(logger, prefix=" [", suffix="]", encoder=JsonEncoder()),
             'message [{"k": "v"}]',
         ),
         (
-            LogMessageWrapper(logger, prefix=" : ", renderer=JsonRenderer()),
+            LogMessageWrapper(logger, prefix=" : ", encoder=JsonEncoder()),
             'message : {"k": "v"}',
         ),
     ],
 )
-def test_prefix_and_suffix(wrapper, expected):
+def test_message_wrapper(wrapper, expected):
     assert wrapper._wrap("message", {"k": "v"}) == expected
+
