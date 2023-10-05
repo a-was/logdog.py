@@ -19,4 +19,10 @@ build: ## Build package
 publish: ## Publish build
 	python -m twine dist/*
 
-.PHONY: test setup build publish
+docs-serve: ## Serve docs
+	mkdocs serve
+
+docs-build: ## Build docs
+	mkdocs build
+
+.PHONY: test setup build publish docs-serve docs-build
