@@ -7,7 +7,9 @@ repo_url: https://github.com/a-was/logdog.py
 theme:
   name: material
   icon:
+    logo: material/dog
     repo: fontawesome/brands/github
+  favicon: assets/dog.png
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
