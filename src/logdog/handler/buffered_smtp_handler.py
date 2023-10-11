@@ -1,0 +1,175 @@
+import contextlib
+import io
+import logging
+import logging.handlers
+import smtplib
+import threading
+import time
+from collections import defaultdict
+from datetime import datetime, timedelta
+from email.message import EmailMessage
+
+_4h = timedelta(hours=4)
+_1min = timedelta(minutes=1)
+
+
+class BufferedSmtpHandler(logging.Handler):
+    def __init__(
+        self,
+        level: int | str = logging.NOTSET,
+        *,
+        host: str,
+        port: int,
+        user: str | None = None,
+        password: str | None = None,
+        sender: str,
+        receivers: list[str] | str,
+        subject: str,
+        use_starttls: bool = True,
+        use_ssl: bool = False,
+        capacity: int | None = None,
+        flush_interval: timedelta | int = _4h,
+        starting_times: int | None = 10,
+        starting_interval: timedelta | int | None = _1min,
+    ):
+        super().__init__(level)
+        self.host = host
+        self.port = port
+        self.user = user
+        self.password = password
+        self.sender = sender
+        if isinstance(receivers, str):
+            receivers = [r.strip() for r in receivers.split(";")]
+        self.receivers = ", ".join(receivers)
+        self.subject = subject
+
+        self.use_starttls = use_starttls
+        self.use_ssl = use_ssl
+
+        if capacity:
+            self.capacity = capacity
+        else:
+            self.capacity = None
+
+        self.buffer: list[logging.LogRecord] = []
+
+        if isinstance(flush_interval, timedelta):
+            self.flush_interval = int(flush_interval.total_seconds())
+        elif isinstance(flush_interval, int):
+            self.flush_interval = flush_interval
+
+        if starting_times:
+            self.starting_times = starting_times
+            if isinstance(starting_interval, timedelta):
+                self.starting_interval = int(starting_interval.total_seconds())
+            elif isinstance(starting_interval, int):
+                self.starting_interval = starting_interval
+        else:
+            self.starting_times = 0
+            self.starting_interval = None
+
+        self.closed = threading.Event()
+        self.start_flushing_thread()
+
+    @contextlib.contextmanager
+    def _server(self):
+        if self.use_ssl:
+            smtp = smtplib.SMTP_SSL(self.host, self.port)
+        else:
+            smtp = smtplib.SMTP(self.host, self.port)
+            if self.use_starttls:
+                smtp.starttls()
+        if self.user and self.password:
+            smtp.login(self.user, self.password)
+        with smtp:
+            yield smtp
+
+    def emit(self, record: logging.LogRecord):
+        if self.closed.is_set():
+            return
+        self.buffer.append(record)
+        if self.should_flush(record):
+            self.flush()
+
+    def should_flush(self, record: logging.LogRecord) -> bool:
+        if self.capacity is None:
+            # using timed flush only
+            return False
+        return len(self.buffer) >= self.capacity
+
+    def flush(self):
+        if len(self.buffer) == 0:
+            return
+        msg = EmailMessage()
+        msg["Subject"] = self.subject
+        msg["From"] = self.sender
+        msg["To"] = self.receivers
+        msg.set_content(
+            self.build_message(),
+        )
+        with self.lock:
+            try:
+                with self._server() as server:
+                    server.send_message(msg)
+            except Exception:
+                self.handleError(self.buffer[-1])
+            finally:
+                self.buffer.clear()
+
+    def close(self):
+        try:
+            self.closed.set()
+            self.flush()
+        finally:
+            super().close()
+
+    def start_flushing_thread(self):
+        self.thread = threading.Thread(
+            target=self.flush_intervals,
+        )
+        self.thread.start()
+
+    def sleep_time_generator(self):
+        for _ in range(self.starting_times):
+            yield self.starting_interval
+        while True:
+            yield self.flush_interval
+
+    def flush_intervals(self):
+        for sleep_time in self.sleep_time_generator():
+            if self.closed.is_set():
+                break
+            time.sleep(sleep_time)
+            self.flush()
+
+    def build_message(self) -> str:
+        sb = io.StringIO()
+        count = defaultdict(lambda: 0)
+        min_time = None
+        max_time = None
+        for r in self.buffer:
+            key = f"{r.filename}:{r.lineno}::{r.funcName}()"
+            count[key] += 1
+
+            if min_time is None or r.created < min_time:
+                min_time = r.created
+            if max_time is None or r.created > max_time:
+                max_time = r.created
+        min_date_str = datetime.fromtimestamp(min_time).isoformat(sep=" ", timespec="milliseconds")
+        max_date_str = datetime.fromtimestamp(max_time).isoformat(sep=" ", timespec="milliseconds")
+
+        if len(self.buffer) > 1:
+            sb.write(f"Collected {len(self.buffer)} logs created between {min_date_str} and {max_date_str}\n")
+        else:
+            sb.write(f"Collected 1 log created at {max_date_str}\n")
+        sb.write("\n")
+
+        for k, v in count.items():
+            sb.write(f"{v} - {k}\n")
+        sb.write("\n")
+
+        for r in self.buffer:
+            sb.write(f"{self.format(r)}\n\n")
+
+        sb.write("-- End of message --\n")
+        return sb.getvalue()
