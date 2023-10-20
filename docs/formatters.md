@@ -175,7 +175,7 @@ Using dict config
 ```python
 {
     "formatters": {
-        "json": {
+        "logfmt": {
             "()": "logdog.LogfmtFormatter",  # or logdog.JsonFormatter
             "keys": "time level message exception lineno:line filename:file",  # optional
             "time_fmt": "iso",  # optional
@@ -184,6 +184,9 @@ Using dict config
     },
 }
 ```
+
+!!! tip
+    Check `examples/logging_config.py` for full example
 
 
 ## Writing your own formatter

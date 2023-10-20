@@ -1,6 +1,7 @@
 site_name: logdog
 site_url: https://a-was.github.io/logdog.py/
 site_author: Adam Wasilewski
+
 repo_name: a-was/logdog.py
 repo_url: https://github.com/a-was/logdog.py
 
@@ -10,6 +11,8 @@ theme:
     logo: material/dog
     repo: fontawesome/brands/github
   favicon: assets/dog.png
+  features:
+    - navigation.top
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
@@ -35,11 +38,11 @@ validation:
   unrecognized_links: warn
 
 markdown_extensions:
-  # code
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
   - pymdownx.superfences
-  # highlight text
-  - pymdownx.critic
+  - pymdownx.critic  # highlight text
+  - admonition
+  - pymdownx.details
