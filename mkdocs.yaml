@@ -46,3 +46,4 @@ markdown_extensions:
   - pymdownx.critic  # highlight text
   - admonition
   - pymdownx.details
+  - tables
