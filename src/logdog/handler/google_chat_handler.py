@@ -28,7 +28,7 @@ class GoogleChatHandler(logging.Handler):
             "Content-Type": "application/json",
         }
 
-    def build_body(self, record: logging.LogRecord):
+    def _build_body(self, record: logging.LogRecord):
         return json.dumps(
             {
                 "text": self.format(record),
@@ -36,7 +36,7 @@ class GoogleChatHandler(logging.Handler):
         )
 
     def emit(self, record: logging.LogRecord):
-        body = self.build_body(record)
+        body = self._build_body(record)
         with self.lock:
             try:
                 conn = http.client.HTTPSConnection(self.host)

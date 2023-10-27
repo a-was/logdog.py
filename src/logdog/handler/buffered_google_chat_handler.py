@@ -41,7 +41,7 @@ class BufferedGoogleChatHandler(BaseBufferedHandler):
             starting_interval=starting_interval,
         )
 
-    def build_body(self):
+    def _build_body(self):
         return json.dumps(
             {
                 "text": self.build_message(),
@@ -51,7 +51,7 @@ class BufferedGoogleChatHandler(BaseBufferedHandler):
     def flush(self):
         if len(self.buffer) == 0:
             return
-        body = self.build_body()
+        body = self._build_body()
         with self.lock:
             try:
                 conn = http.client.HTTPSConnection(self.host)

@@ -42,16 +42,16 @@ class BaseBufferedHandler(ABC, logging.Handler):
             self.starting_interval = None
 
         self.closed = threading.Event()
-        self.start_flushing_thread()
+        self._start_flushing_thread()
 
     def emit(self, record: logging.LogRecord):
         if self.closed.is_set():
             return
         self.buffer.append(record)
-        if self.should_flush(record):
+        if self._should_flush(record):
             self.flush()
 
-    def should_flush(self, record: logging.LogRecord) -> bool:
+    def _should_flush(self, record: logging.LogRecord) -> bool:
         if self.capacity is None:
             # using timed flush only
             return False
@@ -68,20 +68,20 @@ class BaseBufferedHandler(ABC, logging.Handler):
         finally:
             super().close()
 
-    def start_flushing_thread(self):
+    def _start_flushing_thread(self):
         self.thread = threading.Thread(
-            target=self.flush_intervals,
+            target=self._flush_intervals,
         )
         self.thread.start()
 
-    def sleep_time_generator(self):
+    def _sleep_time_generator(self):
         for _ in range(self.starting_times):
             yield self.starting_interval
         while True:
             yield self.flush_interval
 
-    def flush_intervals(self):
-        for sleep_time in self.sleep_time_generator():
+    def _flush_intervals(self):
+        for sleep_time in self._sleep_time_generator():
             if self.closed.is_set():
                 break
             time.sleep(sleep_time)
