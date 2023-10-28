@@ -32,6 +32,9 @@ supported_keys = (
     "threadName",
     "taskName",
 )
+supported_since_python_version = {
+    "taskName": (3, 12),
+}
 
 standard_logging_record_attrs = frozenset(
     (
@@ -60,3 +63,7 @@ standard_logging_record_attrs = frozenset(
         "threadName",
     )
 )
+
+
+class UnsupportedPythonVersionError(Exception):
+    pass

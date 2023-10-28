@@ -1,12 +1,20 @@
 import contextlib
 import logging
 import re
+import sys
 import traceback
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any
 
-from .common import TimeFormat, re_fmt, standard_logging_record_attrs, supported_keys
+from .common import (
+    TimeFormat,
+    UnsupportedPythonVersionError,
+    re_fmt,
+    standard_logging_record_attrs,
+    supported_keys,
+    supported_since_python_version,
+)
 
 
 class BaseFormatter(ABC, logging.Formatter):
@@ -32,6 +40,14 @@ class BaseFormatter(ABC, logging.Formatter):
             time_fmt = TimeFormat(time_fmt)
 
         self._parse_keys(keys)
+
+        for key, version in supported_since_python_version.items():
+            if key in self._keys and version > sys.version_info:
+                min_version = f"{version[0]}.{version[1]}"
+                current_version = f"{sys.version_info[0]}.{sys.version_info[1]}"
+                raise UnsupportedPythonVersionError(
+                    f"Key '{key}' requires Python {min_version}, but {current_version} is used"
+                )
 
         self._use_datetime = False
         self._timestamp_format_fn = None
