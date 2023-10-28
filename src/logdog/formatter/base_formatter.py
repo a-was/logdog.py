@@ -131,13 +131,11 @@ class BaseFormatter(ABC, logging.Formatter):
                     out[target_key] = record.levelno
                 case "message":
                     out[target_key] = record.getMessage()
-                case "logger":
-                    out[target_key] = record.name
                 case "exception" if record.exc_info:
                     out[target_key] = self._format_exception(record.exc_info)
-                case "filename" | "funcName" | "lineno" | "module" | "pathname":
-                    out[target_key] = getattr(record, source_key)
-                case "process" | "processName" | "thread" | "threadName":
+                case "logger":
+                    out[target_key] = record.name
+                case _:
                     out[target_key] = getattr(record, source_key)
 
         # extra keys

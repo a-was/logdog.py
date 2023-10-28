@@ -19,6 +19,7 @@ supported_keys = (
     "level",
     "levelno",
     "message",
+    "exception",
     "logger",
     "filename",
     "funcName",
@@ -29,7 +30,7 @@ supported_keys = (
     "processName",
     "thread",
     "threadName",
-    "exception",
+    "taskName",
 )
 
 standard_logging_record_attrs = frozenset(
@@ -54,6 +55,7 @@ standard_logging_record_attrs = frozenset(
         "processName",
         "relativeCreated",
         "stack_info",
+        "taskName",
         "thread",
         "threadName",
     )
