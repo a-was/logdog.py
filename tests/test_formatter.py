@@ -1,9 +1,11 @@
 import logging
 import logging.handlers
+import sys
 
 import pytest
 
 from src.logdog import JsonFormatter, LogfmtFormatter
+from src.logdog.exceptions import UnsupportedPythonVersionError
 from tests.mock import MockStream
 
 logger = logging.getLogger(__name__)
@@ -157,3 +159,21 @@ def test_keys_formats(formats, expected):
 def test_invalid_format(format):
     with pytest.raises(ValueError):
         JsonFormatter(format)
+    with pytest.raises(ValueError):
+        LogfmtFormatter(format)
+
+
+@pytest.mark.skipif(sys.version_info >= (3, 12), reason="Python < 3.12 required")
+def test_keys_format_below_version_3_12():
+    with pytest.raises(UnsupportedPythonVersionError):
+        JsonFormatter("taskName")
+    with pytest.raises(UnsupportedPythonVersionError):
+        LogfmtFormatter("taskName")
+
+
+@pytest.mark.skipif(sys.version_info < (3, 12), reason="Python 3.12+ required")
+def test_keys_format_above_version_3_12():
+    formatter = LogfmtFormatter("taskName")
+    assert "taskName" in formatter._keys
+    formatter = JsonFormatter("taskName")
+    assert "taskName" in formatter._keys
