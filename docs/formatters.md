@@ -11,7 +11,7 @@ Firstly, you define which fields you want to include in logs
 {==
 
 **time**, **level**, **message**, **exception**, logger, levelno, filename,
-funcName, lineno, module, pathname, process, processName, thread, threadName
+funcName, lineno, module, pathname, process, processName, thread, threadName, taskName
 
 ==}
 
@@ -58,6 +58,9 @@ So you can add new fields by separating them with spaces,
 create an alias for each key and disable default ones with special `-` value
 
 **Extra keys are always added, so they are not included in this format**
+
+!!! info
+    `taskName` key was added in Python 3.12
 
 
 ## JsonFormatter
