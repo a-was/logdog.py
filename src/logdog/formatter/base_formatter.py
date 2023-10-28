@@ -131,8 +131,9 @@ class BaseFormatter(ABC, logging.Formatter):
                     out[target_key] = record.levelno
                 case "message":
                     out[target_key] = record.getMessage()
-                case "exception" if record.exc_info:
-                    out[target_key] = self._format_exception(record.exc_info)
+                case "exception":
+                    if record.exc_info:
+                        out[target_key] = self._format_exception(record.exc_info)
                 case "logger":
                     out[target_key] = record.name
                 case _:
