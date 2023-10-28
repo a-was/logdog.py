@@ -179,5 +179,6 @@ class MyHandler(BaseBufferedHandler):
             except Exception:
                 self.handleError(self.buffer[-1])
             finally:
-                // close connection
+                // close connection here and clear buffer
+                self.buffer.clear()
 ```
