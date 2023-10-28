@@ -65,3 +65,4 @@ class BufferedGoogleChatHandler(BaseBufferedHandler):
                 self.handleError(self.buffer[-1])
             finally:
                 conn.close()
+                self.buffer.clear()
