@@ -7,9 +7,9 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any
 
+from ..exceptions import UnsupportedPythonVersionError
 from .common import (
     TimeFormat,
-    UnsupportedPythonVersionError,
     re_fmt,
     standard_logging_record_attrs,
     supported_keys,

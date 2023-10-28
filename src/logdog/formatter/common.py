@@ -63,7 +63,3 @@ standard_logging_record_attrs = frozenset(
         "threadName",
     )
 )
-
-
-class UnsupportedPythonVersionError(Exception):
-    pass

@@ -1,0 +1,2 @@
+class UnsupportedPythonVersionError(Exception):
+    pass
