@@ -1,5 +1,15 @@
 # Changelog
 
+# [v0.3.1] - 2023.10.28
+
+[v0.3.1]: https://github.com/a-was/logdog.py/compare/v0.3.0...v0.3.1
+
+- Fix not clearing buffer after calling `flush()` in `BufferedGoogleChatHandler`
+- Add `taskName` key support (Python 3.12+)
+- Add checking Python version when using key
+- Test code using multiple Python versions
+
+
 # [v0.3.0] - 2023.10.28
 
 [v0.3.0]: https://github.com/a-was/logdog.py/compare/v0.2.0...v0.3.0
