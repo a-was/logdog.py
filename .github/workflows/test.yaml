@@ -12,6 +12,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
     steps:
       -
         name: Checkout
@@ -20,11 +23,11 @@ jobs:
         name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: ${{ matrix.python }}
       -
         name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
+          pip install --upgrade pip
           pip install ruff pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       -
