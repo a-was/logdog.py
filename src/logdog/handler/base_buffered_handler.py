@@ -71,6 +71,7 @@ class BaseBufferedHandler(ABC, logging.Handler):
     def _start_flushing_thread(self):
         self.thread = threading.Thread(
             target=self._flush_intervals,
+            daemon=True,
         )
         self.thread.start()
 
