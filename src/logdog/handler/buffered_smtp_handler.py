@@ -40,6 +40,10 @@ class BufferedSmtpHandler(BaseBufferedHandler):
         self.use_starttls = use_starttls
         self.use_ssl = use_ssl
 
+        # check connection
+        with self._server() as smtp:
+            smtp.noop()
+
         super().__init__(
             level=level,
             capacity=capacity,
