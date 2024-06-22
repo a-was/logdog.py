@@ -50,12 +50,19 @@ BaseBufferedHandler has ***starting*** feature
 
 ### Params
 
-| Name              | Type                 | Default  | Description                                         |
-|-------------------|----------------------|----------|-----------------------------------------------------|
-| capacity          | `int` or `None`      | `None`   | Maximum number of logs to keep in buffer. After this value is reached, handler will send messages. If `None` only timed interval will be used |
-| flush_interval    | `timedelta` or `int` | 4 hours  | How long to wait between sending messages in buffer |
-| starting_times    | `int` or `None`      | 10       | How many times to wait for `starting_interval` on start. Can be disabled with 0 |
-| starting_interval | `timedelta` or `int` | 1 minute | How long to wait in starting mode                   |
+| Name              | Type                        | Default  | Description                                         |
+|-------------------|-----------------------------|----------|-----------------------------------------------------|
+| capacity          | `int` or `None`             | `None`   | Maximum number of logs to keep in buffer. After this value is reached, handler will send messages. If `None` only timed interval will be used |
+| flush_interval    | `timedelta`, `int` or `str` | 4 hours  | How long to wait between sending messages in buffer |
+| starting_times    | `int` or `None`             | 10       | How many times to wait for `starting_interval` on start. Can be disabled with 0 |
+| starting_interval | `timedelta`, `int` or `str` | 1 minute | How long to wait in starting mode                   |
+
+!!! note
+
+    You can use more than one type for the `flush_interval` and `starting_interval` parameters: <br/ >
+    - `timedelta`: value is set to the timedelta's duration <br/ >
+    - `int`: value is treated as a number of seconds. So, to get 1 hour, set it to 3600. <br/ >
+    - `str`: value should be in `[0-9]+[smh]` format, for example `6h`, `45m` or `6h30m10s`
 
 ### Message format
 
@@ -123,8 +130,6 @@ It also means it has *starting* feature. <br />
 | subject                        | `str`                |         |                                                   |
 | use_starttls                   | `bool`               | `True`  |                                                   |
 | use_ssl                        | `bool`               | `False` |                                                   |
-| capacity                       | `int` or `None`      | `None`  |                                                   |
-| flush_interval                 | `timedelta` or `int` | 4 hours |                                                   |
 | + `BaseBufferedHandler` params                                                                                      |
 
 

@@ -3,8 +3,6 @@ name: Run python tests
 on:
   pull_request:
   push:
-    branches:
-      - main
     paths:
       - src/**
       - tests/**

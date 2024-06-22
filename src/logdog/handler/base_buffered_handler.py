@@ -7,6 +7,8 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 from datetime import datetime, timedelta
 
+from .. import _util
+
 _4h = timedelta(hours=4)
 _1min = timedelta(minutes=1)
 
@@ -17,9 +19,9 @@ class BaseBufferedHandler(ABC, logging.Handler):
         level: int | str = logging.NOTSET,
         *,
         capacity: int | None = None,
-        flush_interval: timedelta | int = _4h,
+        flush_interval: timedelta | int | str = _4h,
         starting_times: int | None = 10,
-        starting_interval: timedelta | int | None = _1min,
+        starting_interval: timedelta | int | str | None = _1min,
     ):
         super().__init__(level)
 
@@ -30,6 +32,10 @@ class BaseBufferedHandler(ABC, logging.Handler):
             self.flush_interval = int(flush_interval.total_seconds())
         elif isinstance(flush_interval, int):
             self.flush_interval = flush_interval
+        elif isinstance(flush_interval, str):
+            self.flush_interval = _util.duration.parse_duration(flush_interval)
+        if self.flush_interval <= 0:
+            raise ValueError("flush_interval must be positive")
 
         if starting_times:
             self.starting_times = starting_times
@@ -37,6 +43,10 @@ class BaseBufferedHandler(ABC, logging.Handler):
                 self.starting_interval = int(starting_interval.total_seconds())
             elif isinstance(starting_interval, int):
                 self.starting_interval = starting_interval
+            elif isinstance(starting_interval, str):
+                self.starting_interval = _util.duration.parse_duration(flush_interval)
+            if self.starting_interval <= 0:
+                raise ValueError("starting_interval must be positive")
         else:
             self.starting_times = 0
             self.starting_interval = None
