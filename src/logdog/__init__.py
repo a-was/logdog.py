@@ -1,3 +1,4 @@
+from . import _util
 from .encoder import (
     BaseEncoder,
     JsonEncoder,

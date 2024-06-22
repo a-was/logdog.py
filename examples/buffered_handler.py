@@ -17,7 +17,7 @@ google = BufferedGoogleChatHandler(
     capacity=None,
     flush_interval=timedelta(minutes=15),
     starting_times=10,
-    starting_interval=timedelta(minutes=1),
+    starting_interval="45s",
 )
 google.setLevel(logging.INFO)
 google.setFormatter(formatter)

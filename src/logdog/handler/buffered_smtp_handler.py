@@ -23,9 +23,9 @@ class BufferedSmtpHandler(BaseBufferedHandler):
         use_starttls: bool = True,
         use_ssl: bool = False,
         capacity: int | None = None,
-        flush_interval: timedelta | int = _4h,
+        flush_interval: timedelta | int | str = _4h,
         starting_times: int | None = 10,
-        starting_interval: timedelta | int | None = _1min,
+        starting_interval: timedelta | int | str | None = _1min,
     ):
         self.host = host
         self.port = port

@@ -14,9 +14,9 @@ class BufferedGoogleChatHandler(BaseBufferedHandler):
         *,
         webhook_url: str,
         capacity: int | None = None,
-        flush_interval: timedelta | int = _4h,
+        flush_interval: timedelta | int | str = _4h,
         starting_times: int | None = 10,
-        starting_interval: timedelta | int | None = _1min,
+        starting_interval: timedelta | int | str | None = _1min,
     ):
         self.webhook_url = webhook_url
 
@@ -61,8 +61,8 @@ class BufferedGoogleChatHandler(BaseBufferedHandler):
                     body=body,
                     headers=self.headers,
                 )
+                conn.close()
             except Exception:
                 self.handleError(self.buffer[-1])
             finally:
-                conn.close()
                 self.buffer.clear()
