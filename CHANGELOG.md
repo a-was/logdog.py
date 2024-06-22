@@ -1,5 +1,12 @@
 # Changelog
 
+# [v0.4.0] - 2024.06.22
+
+[v0.4.0]: https://github.com/a-was/logdog.py/compare/v0.3.3...v0.4.0
+
+- Support duration strings (for example `4h30m28s`)
+
+
 # [v0.3.3] - 2023.11.18
 
 [v0.3.3]: https://github.com/a-was/logdog.py/compare/v0.3.2...v0.3.3
